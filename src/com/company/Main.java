@@ -19,7 +19,6 @@ public class Main {
         System.out.print("Enter Email address:");
         resume.setEmail(keyboard.nextLine());
 
-
         //enter the educational experiences
         do {
 

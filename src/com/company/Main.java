@@ -1,6 +1,11 @@
 package com.company;
 
+import java.time.LocalDate;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
@@ -27,8 +32,17 @@ public class Main {
         // enter name and email address
         System.out.print("Enter name:");
         resume.setName(keyboard.nextLine());
-        System.out.print("Enter Email address:");
-        resume.setEmail(keyboard.nextLine());
+        String emailAdress = "";
+        boolean emailValid=false;
+        do {
+            System.out.print("Enter Email address:");
+            emailAdress = keyboard.nextLine();
+            emailValid = isValidEmailAddress(emailAdress);
+            if(!emailValid) {
+                System.out.println("   Enter a valid email address.");
+            }
+        }while (!emailValid);
+        resume.setEmail(emailAdress);
 
         //enter the educational experiences
         /*-------------------------------------------------------------------------------------------------------------------------*/
@@ -159,8 +173,15 @@ public class Main {
         educationalExperience.setSchoolName(keyboard.nextLine());
         System.out.print("  Enter degree:");
         educationalExperience.setDegree(keyboard.nextLine());
-        System.out.print("  Enter year of completion:");
-        educationalExperience.setYearCompletion(keyboard.nextLine());
+        Year yearCompletion = null;
+        do {
+            System.out.print("  Enter year of completion "+(char)27+"[1m(format yyyy)"+(char)27+"[0m:");
+            String YearCompletionStr = keyboard.next();
+            keyboard.nextLine();
+
+            yearCompletion = parseYearCompletion(YearCompletionStr);
+        } while (yearCompletion == null);
+        educationalExperience.setYearCompletion(yearCompletion);
 
         resume.addResumeItem(educationalExperience);
 
@@ -170,6 +191,7 @@ public class Main {
     // and add it to the resume
     public static void addJobExperience(Resume resume) {
         Scanner keyboard = new Scanner(System.in);
+        DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd MM yyyy");
 
         String answer = "";
         int dutyCounter = 0;
@@ -179,10 +201,24 @@ public class Main {
         jobExperience.setTitleOfPosition(keyboard.nextLine());
         System.out.print("  Enter job place:");
         jobExperience.setPlace(keyboard.nextLine());
-        System.out.print("  Enter start date:");
-        jobExperience.setStartDate(keyboard.nextLine());
-        System.out.print("  Enter end date:");
-        jobExperience.setEndDate(keyboard.nextLine());
+        //enter the start year and make sure it is valid
+        YearMonth startDate = null;
+        do {
+            System.out.print("  Enter start date "+(char)27+"[1m(format mm/yyyy)"+(char)27+"[0m:");
+            String startDateStr = keyboard.nextLine();
+            startDate = parseJobYear(startDateStr);
+        } while (startDate == null);
+        jobExperience.setStartDate(startDate);
+
+        //enter the end year and make sure it is valid
+        YearMonth endDate = null;
+
+        do {
+             System.out.print("  Enter end date "+(char)27+"[1m(format mm/yyyy)"+(char)27+"[0m:");
+            String endDateStr = keyboard.nextLine();
+            endDate = parseJobYear(endDateStr);
+        } while (endDate == null);
+        jobExperience.setEndDate(endDate);
 
         do {
             System.out.print("   Press (D) to enter a duty or (Q) to quit.");
@@ -215,6 +251,57 @@ public class Main {
 
         resume.addResumeItem(skill);
 
+    }
+
+    //get the user year of completion and make sure it is valid
+    public static Year parseYearCompletion(String yearStr){
+
+        DateTimeFormatter dTF = DateTimeFormatter.ofPattern("yyyy");
+
+        Year year = null;
+         try {
+                year = year.parse(yearStr, dTF);
+
+                if (year.isAfter(year.now())) {
+                    System.out.println("    The year is in the past. Enter a valid year.");
+                    year = null;
+                }
+            } catch (Exception e) {
+                System.out.println("    Unable to convert the string you entered " + yearStr+  " to a year (yyyy). Please try again!");
+
+            }
+
+        return year;
+
+    }
+
+    //get the user year of completion and make sure it is valid
+    public static YearMonth parseJobYear(String dateStr){
+
+        DateTimeFormatter dTF = DateTimeFormatter.ofPattern("MM/yyyy");
+
+        YearMonth date = null;
+
+        try {
+            date = date.parse(dateStr, dTF);
+
+            if (date.isAfter(YearMonth.now())) {
+                System.out.println("    The date is in the past. Enter a valid date.");
+                date = null;
+            }
+        } catch (Exception e) {
+            System.out.println("    Unable to convert the string you entered " + dateStr + " to a date (mm/yyyy). Enter a valid date!");
+
+        }
+
+        return date;
+    }
+    //make sure the email address is valid
+    public static boolean isValidEmailAddress(String email) {
+             String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+            java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+            java.util.regex.Matcher m = p.matcher(email);
+            return m.matches();
     }
 
     // display the resume to the console

@@ -2,17 +2,22 @@ package com.company;
 
 /* this class manage educational experience data and writing*/
 
+import java.time.LocalDate;
+import java.time.Year;
+import java.time.format.DateTimeFormatter;
+
 public class EducationalExperience extends ResumeItem{
     private String schoolName;
-    private String yearCompletion;
+    Year yearCompletion;
     private String degree;
     private String gpa;
 
     public EducationalExperience(){
 
+
     }
 
-    public EducationalExperience(String schoolName, String yearCompletetion, String degree, String gpa) {
+    public EducationalExperience(String schoolName, Year yearCompletetion, String degree, String gpa) {
         this.schoolName = schoolName;
         this.yearCompletion = yearCompletetion;
         this.degree = degree;
@@ -27,11 +32,11 @@ public class EducationalExperience extends ResumeItem{
         this.schoolName = schoolName;
     }
 
-    public String getYearCompletion() {
+    public Year getYearCompletion() {
         return yearCompletion;
     }
 
-    public void setYearCompletion(String yearCompletion) {
+    public void setYearCompletion(Year yearCompletion) {
         this.yearCompletion = yearCompletion;
     }
 

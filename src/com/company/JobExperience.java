@@ -1,5 +1,8 @@
 package com.company;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /* this class manage school experience data and writing*/
@@ -8,8 +11,8 @@ public class JobExperience extends ResumeItem{
 
     String titleOfPosition;
     String place;
-    String startDate;
-    String endDate;
+    YearMonth startDate;
+    YearMonth endDate;
     ArrayList<Duty> duties;
 
     public JobExperience(){
@@ -17,7 +20,7 @@ public class JobExperience extends ResumeItem{
     }
 
 
-    public JobExperience(String titleOfPosition, String place, String startDate, String endDate, ArrayList<Duty> duties) {
+    public JobExperience(String titleOfPosition, String place, YearMonth startDate, YearMonth endDate, ArrayList<Duty> duties) {
         this.titleOfPosition = titleOfPosition;
         this.place = place;
         this.startDate = startDate;
@@ -34,19 +37,19 @@ public class JobExperience extends ResumeItem{
         this.titleOfPosition = titleOfPosition;
     }
 
-    public String getStartDate() {
+    public YearMonth getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(YearMonth startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public YearMonth getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(YearMonth endDate) {
         this.endDate = endDate;
     }
 
@@ -75,13 +78,15 @@ public class JobExperience extends ResumeItem{
     @Override
     public String toString() {
 
+        DateTimeFormatter longFormat = DateTimeFormatter.ofPattern("MMMM yyyy");
         String dutiesStr = "";
 
         for(Duty duty:duties) {
             dutiesStr = dutiesStr + duty;
         }
         return titleOfPosition + "\n" +
-                place + ", " + startDate + " - " + endDate + "\n" +
+                //place + ", " + startDate.getMonth()+ " " + startDate.getYear()+ " - " + endDate.getMonth() + " " +endDate.getYear() + "\n" +
+                place + ", " + startDate.format(longFormat)+ " - " + endDate.format(longFormat) + "\n" +
                 dutiesStr;
 
     }
